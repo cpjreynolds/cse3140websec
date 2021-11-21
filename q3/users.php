@@ -2,34 +2,27 @@
 
 // absolutely everything about this implementation is heinous and might actually
 // be a crime against humanity. I'm lazy and don't wanna database.
-
-$default_users = ['default' => 'password123'];
+define("USERDB_FNAME", './userdb.json');
 
 function userdb_get($fname) {
-    $raw = file_get_contents($fname);
-    if ($raw === false) {
-        // no user file. make a default.
-        $users = $default_users;
-        file_put_contents($fname, json_encode($users));
-    } else {
-        $users = json_decode($raw, true) ?? die("bad userdb JSON format");
-    }
-    return $users;
+  $users = array();
+  $users['default'] = password_hash('password123', PASSWORD_DEFAULT);
+  if (file_exists($fname)) {
+    $raw = file_get_contents($fname) ?? die("unexpected");
+    $users = json_decode($raw, true) ?? die("bad userdb JSON format");
+  } else {
+    file_put_contents($fname, json_encode($users));
+  }
+  return $users;
 }
 
 function register_user($fname, $uname, $passwd) {
     $users = userdb_get($fname);
-    $users[$uname] = $passwd;
+    $users[$uname] = password_hash($passwd, PASSWORD_DEFAULT);
     file_put_contents($fname, json_encode($users));
 }
 
-function authenticate_user($uname, $passwd) {
-    $users = userdb_get($fname);
-    if (!isset($users[$uname])) {
-        return false;
-    } elseif (strcmp($users[$uname], $passwd) !== 0) {
-        return false;
-    } else {
-        return true;
-    }
+function authenticate_user($fname, $uname, $passwd) {
+  $users = userdb_get($fname);
+  return password_verify($passwd, $users[$uname]);
 }
