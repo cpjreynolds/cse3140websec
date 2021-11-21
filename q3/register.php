@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     .error { color: #FF0000; }
-    .success { color: #00ff00; }
+    .success { color: #00ab66; }
   </style>
   <title>CSE3140 WebSec Lab</title>
 </head>

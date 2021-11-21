@@ -24,5 +24,9 @@ function register_user($fname, $uname, $passwd) {
 
 function authenticate_user($fname, $uname, $passwd) {
   $users = userdb_get($fname);
-  return password_verify($passwd, $users[$uname]);
+  if (isset($users[$uname])) {
+    return password_verify($passwd, $users[$uname]);
+  } else {
+    return false;
+  }
 }
