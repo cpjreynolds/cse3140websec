@@ -37,16 +37,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ctext = $_POST["ctext"];
   }
 
-  $err = $uname_err || $passwd_err || $ctext_err || $login_err;
+  $err = $uname_err || $passwd_err || $ctext_err;
 
-  if (!$err && authenticate_user(USERDB_FNAME, $username, $passwd)) {
-    commentdb_add(COMMENTDB_FNAME, $username, $ctext);
-    $success = "Posted comment";
-    $ctext = "";
-    $login_err = "";
+  if (!$err) {
+    $isauth = authenticate_user(USERDB_FNAME, $username, $passwd);
+    if ($isauth) {
+      commentdb_add(COMMENTDB_FNAME, $username, $ctext);
+      $success = "Posted comment";
+      $ctext = "";
+      $login_err = "";
+    } else {
+      $login_err = "Login failed: check your credentials or register for an account";
+      $passwd = "";
+    }
   } else {
-    $login_err = "Login failed: check your credentials or register for an account";
-    $passwd="";
     $success="";
   }
 }?>

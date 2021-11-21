@@ -40,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!$err) {
     register_user(USERDB_FNAME, $username, $passwd);
     $success = 'Account creation successful';
+    $username = $passwd = "";
   }
 }
 ?>
@@ -56,10 +57,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <hr>
   <br>
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-    Username:<br><input type="text" name="username">
+    Username:<br><input type="text" name="username" value="<?php echo $username;?>">
     <span class="error">* <?php echo $uname_err;?></span>
     <br><br>
-    Password:<br><input type="password" name="passwd">
+    Password:<br><input type="password" name="passwd" value="<?php echo $passwd;?>">
     <span class="error">* <?php echo $passwd_err;?></span>
     <br><br>
     Confirm password:<br><input type="password" name="passwdconfirm">
